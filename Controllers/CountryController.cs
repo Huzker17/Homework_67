@@ -17,10 +17,21 @@ namespace WebApi.Controllers
         public CountryController(ApplicationDbContext context)
         {
             _db = context;
-            if (!_db.Countries.Any())
+            if (!_db.CountriesContext.Any())
             {
-                _db.Countries.Add(new Country { Name = "Tom" });
-                _db.Countries.Add(new Country { Name = "Alice" });
+                _db.CountriesContext.Add(new Country {Id = 1, Name = "Austria",Capital ="Vena",Currency= "EUR" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Germany", Capital = "Munich", Currency = "EUR" } );
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Spain", Capital = "Madrid", Currency = "EUR" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Italy", Capital = "Rome", Currency = "EUR" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Island", Capital = "Reykjavik", Currency = "ISK" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Hungary", Capital = "Budapest", Currency = "HUF" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "England", Capital = "London", Currency = "GBP" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Belarus", Capital = "Minsk", Currency = "BYR" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Sweden", Capital = "Stickholm", Currency = "SEK" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Serbia", Capital = "Belgrade", Currency = "RSD" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Romania", Capital = "Bucharest", Currency = "RON" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Norway", Capital = "Oslo", Currency = "NOK" });
+                _db.CountriesContext.Add(new Country { Id = 2, Name = "Moldova", Capital = "Chisinau", Currency = "MDL" });
                 _db.SaveChanges();
             }
         }
@@ -28,14 +39,22 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Country>>> Get()
         {
-            return await _db.Countries.ToListAsync();
+            return await _db.CountriesContext.ToListAsync();
         }
 
         // GET api/users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Country>> Get(int id)
         {
-            Country country = await _db.Countries.FirstOrDefaultAsync(x => x.Id == id);
+            Country country = await _db.CountriesContext.FirstOrDefaultAsync(x => x.Id == id);
+            if (country == null)
+                return NotFound();
+            return new ObjectResult(country);
+        }
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Country>> Get(string name)
+        {
+            Country country = await _db.CountriesContext.FirstOrDefaultAsync(x => x.Name == name);
             if (country == null)
                 return NotFound();
             return new ObjectResult(country);
@@ -49,7 +68,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            _db.Countries.Add(country);
+            _db.CountriesContext.Add(country);
             await _db.SaveChangesAsync();
             return Ok(country);
         }
@@ -62,7 +81,7 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            if (!_db.Countries.Any(x => x.Id == country.Id))
+            if (!_db.CountriesContext.Any(x => x.Id == country.Id))
             {
                 return NotFound();
             }
@@ -75,12 +94,12 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Country>> Delete(int id)
         {
-            Country country = _db.Countries.FirstOrDefault(x => x.Id == id);
+            Country country = _db.CountriesContext.FirstOrDefault(x => x.Id == id);
             if (country == null)
             {
                 return NotFound();
             }
-            _db.Countries.Remove(country);
+            _db.CountriesContext.Remove(country);
             await _db.SaveChangesAsync();
             return Ok(country);
         }

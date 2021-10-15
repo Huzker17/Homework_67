@@ -8,7 +8,7 @@ namespace WebApi.Models
 {
     public class ApplicationDbContext: DbContext
     {
-        public DbSet<Country> Countries { get; set; }
+        public DbSet<Country> CountriesContext { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
       : base(options)
